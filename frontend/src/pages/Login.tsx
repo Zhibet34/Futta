@@ -1,5 +1,6 @@
 import { Lock, Mail } from 'lucide-react';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 export function Login() {
@@ -58,6 +59,7 @@ export function Login() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                     required
+                    name='email'
                   />
                 </div>
               </div>
@@ -69,6 +71,7 @@ export function Login() {
                   <Lock className="h-5 w-5 text-indigo-600 absolute left-3 top-1/2 transform -translate-y-1/2" />
                   <input
                     type="password"
+                    name='password'
                     id="password"
                     placeholder="Enter your password"
                     value={password}
@@ -103,11 +106,13 @@ export function Login() {
                 Create an account to get started. Enjoy exclusive benefits and
                 manage your account with ease.
               </p>
+              <Link to='sign-up'>
               <button
                 className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
               >
                 Sign Up
               </button>
+              </Link>
             </div>
           </div>
 

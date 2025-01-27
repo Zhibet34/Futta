@@ -1,6 +1,6 @@
-import React, { useState } from 'react'; // Add useState for mobile menu toggle
 import { Link } from 'react-router-dom';
-import { Bike, ShoppingCart, User, Menu, X } from 'lucide-react';
+import { useState } from 'react';
+import { Bike, User, Menu, X } from 'lucide-react';
 
 export function Navbar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State to manage mobile menu visibility
@@ -8,6 +8,12 @@ export function Navbar() {
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
+
+  const [isloggedIn, setIsloggedIn] = useState(false); // State to manage mobile menu visibility
+
+  const toggleloggedInMenu = () => {
+    setIsloggedIn(!isMobileMenuOpen);
+  }; // a logout icons if a user is logged in
 
   return (
     <nav className="bg-indigo-600 text-white">

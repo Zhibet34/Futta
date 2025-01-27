@@ -2,11 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
 import { Home } from './pages/Home';
-import { Shop } from './pages/Shop';
 import { About } from './pages/About';
 import { Services } from './pages/Services';
 import { Contact } from './pages/Contact';
 import { Login } from './pages/Login';
+import { Signup } from './pages/Signup';
 
 function App() {
   return (
@@ -20,6 +20,7 @@ function App() {
             <Route path="/services" element={<Services />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/login/sign-up" element={<Signup />} />
           </Routes>
         </div>
         <footer className="bg-gray-900 text-white py-12">
