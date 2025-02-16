@@ -1,33 +1,33 @@
 import { Lock, Mail } from 'lucide-react';
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export function Login() {
+  const navigate = useNavigate(); // Initialize useNavigate
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // Add loading state
+  const [error, setError] = useState(''); // Add error state
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-  
-    setLoading(true);
-    setError('');
-  
+    e.preventDefault(); // Prevent default form submission
+    setLoading(true); // Set loading to true
+    setError(''); // Clear any previous errors
+
     try {
-      const response = await axios.post('http://localhost:3001/login', {
-        email,
-        password,
-      });
-  
+      // Make API call to login
+      const response = await axios.post('http://localhost:3001/login', { email, password });
+
+      // Handle successful login
       console.log('Login successful:', response.data);
-      // Redirect or store authentication token here
-    } catch (error) {
-      setError(error.response?.data?.message || 'An error occurred during login.');
-      console.error('Login error:', error);
+      navigate('/'); // Redirect to dashboard or another page
+    } catch (err) {
+      // Handle error
+      setError(err.response?.data?.message || 'An error occurred during login.');
     } finally {
-      setLoading(false);
+      setLoading(false); // Set loading to false
     }
   };
 
@@ -59,7 +59,7 @@ export function Login() {
                     onChange={(e) => setEmail(e.target.value)}
                     className="w-full pl-10 px-4 py-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                     required
-                    name='email'
+                    name="email"
                   />
                 </div>
               </div>
@@ -71,7 +71,7 @@ export function Login() {
                   <Lock className="h-5 w-5 text-indigo-600 absolute left-3 top-1/2 transform -translate-y-1/2" />
                   <input
                     type="password"
-                    name='password'
+                    name="password"
                     id="password"
                     placeholder="Enter your password"
                     value={password}
@@ -106,12 +106,10 @@ export function Login() {
                 Create an account to get started. Enjoy exclusive benefits and
                 manage your account with ease.
               </p>
-              <Link to='sign-up'>
-              <button
-                className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700"
-              >
-                Sign Up
-              </button>
+              <Link to="sign-up">
+                <button className="w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700">
+                  Sign Up
+                </button>
               </Link>
             </div>
           </div>

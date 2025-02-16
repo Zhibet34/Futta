@@ -10,6 +10,7 @@ require('dotenv').config();
 const loginRoute = require('./routes/login');
 const signUpRoute = require('./routes/signup');
 const User = require('./model/userModel'); // Ensure this path is correct
+const logOutRoute = require('./routes/logout');
 
 // Check for required environment variables
 if (!process.env.MONGO_URI) {
@@ -59,18 +60,25 @@ app.use(passport.initialize()); // Initialize Passport
 app.use(passport.session()); // Enable session support for Passport
 
 // Passport Local Strategy
-passport.use(new LocalStrategy(User.authenticate())); // Use LocalStrategy for authentication
-passport.serializeUser(User.serializeUser()); // Serialize user for session
-passport.deserializeUser(User.deserializeUser()); // Deserialize user from session
+passport.use(new LocalStrategy(User.authenticate())); 
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 // Test route
 app.get('/', (req, res) => {
   res.send('Server is running!');
 });
 
+//local factoring
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
+
 // Routes
 app.use('/', loginRoute);
 app.use('/', signUpRoute);
+app.use('/',logOutRoute)
 
 // Start the server
 const port = process.env.PORT || 3001;

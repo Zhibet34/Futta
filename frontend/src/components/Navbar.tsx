@@ -1,19 +1,34 @@
-import { Link } from 'react-router-dom';
-import { useState } from 'react';
-import { Bike, User, Menu, X } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Bike, User, Menu, X, LogOut } from 'lucide-react';
+import axios from 'axios';
 
 export function Navbar() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false); // State to manage mobile menu visibility
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  // Check for token on mount and when token changes
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    setIsLoggedIn(!!token);
+  }, [localStorage.getItem('authToken')]);
 
   const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
+    setIsMobileMenuOpen((prev) => !prev);
   };
 
-  const [isloggedIn, setIsloggedIn] = useState(false); // State to manage mobile menu visibility
-
-  const toggleloggedInMenu = () => {
-    setIsloggedIn(!isMobileMenuOpen);
-  }; // a logout icons if a user is logged in
+  const handleLogout = async () => {
+    try {
+      await axios.get('http://localhost:3001/logout');
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      localStorage.removeItem('authToken');
+      setIsLoggedIn(false);
+      navigate('/login');
+    }
+  };
 
   return (
     <nav className="bg-indigo-600 text-white">
@@ -27,7 +42,7 @@ export function Navbar() {
             </Link>
           </div>
 
-          {/* Desktop Menu (hidden on small screens) */}
+          {/* Desktop Menu */}
           <div className="hidden md:block">
             <div className="flex items-center space-x-8">
               <Link to="/about" className="hover:text-indigo-200">
@@ -42,34 +57,61 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Icons (User and Mobile Menu Toggle) */}
+          {/* Icons */}
           <div className="flex items-center space-x-4">
-            <Link to="/login">
-              <button className="p-2 rounded-full hover:bg-indigo-700">
-                <User className="h-6 w-6" />
+            {isLoggedIn ? (
+              <button
+                onClick={handleLogout}
+                className="p-2 rounded-full hover:bg-indigo-700"
+                aria-label="Log out"
+              >
+                <LogOut className="h-6 w-6" />
               </button>
-            </Link>
-            {/* Mobile Menu Toggle Button (hidden on larger screens) */}
+            ) : (
+              <Link to="/login">
+                <button
+                  className="p-2 rounded-full hover:bg-indigo-700"
+                  aria-label="Log in"
+                >
+                  <User className="h-6 w-6" />
+                </button>
+              </Link>
+            )}
+
+            {/* Mobile Menu Toggle */}
             <button
               className="md:hidden p-2 rounded-full hover:bg-indigo-700"
               onClick={toggleMobileMenu}
+              aria-label="Toggle mobile menu"
             >
               {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu (visible on small screens) */}
+        {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <div className="md:hidden">
             <div className="flex flex-col space-y-4 pb-4">
-              <Link to="/about" className="hover:text-indigo-200" onClick={toggleMobileMenu}>
+              <Link
+                to="/about"
+                className="hover:text-indigo-200"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 About
               </Link>
-              <Link to="/services" className="hover:text-indigo-200" onClick={toggleMobileMenu}>
+              <Link
+                to="/services"
+                className="hover:text-indigo-200"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Services
               </Link>
-              <Link to="/contact" className="hover:text-indigo-200" onClick={toggleMobileMenu}>
+              <Link
+                to="/contact"
+                className="hover:text-indigo-200"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
                 Contact
               </Link>
             </div>
